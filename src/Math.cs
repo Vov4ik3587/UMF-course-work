@@ -8,22 +8,22 @@ namespace kursach
         /// <param name="m"> Matrix, stored in 2-dim double array</param>
         /// <param name="b"> Vector, that multiplies matrix </param>
         /// <returns> Resulting vector of multiplication </returns>
-        public static double[] MatMul(double[,] m, double[] b)
+        public static double[] MatrixMultiply(double[,] m, double[] b)
         {
             var columns = m.GetLength(0);
             var rows = m.GetLength(1);
 
-            var res = new double[rows];
+            var result = new double[rows];
 
             for (var i = 0; i < rows; i++)
             {
                 for (var j = 0; j < columns; j++)
                 {
-                    res[i] += m[i, j] * b[j];
+                    result[i] += m[i, j] * b[j];
                 }
             }
 
-            return res;
+            return result;
         }
 
         /// <summary>
@@ -32,7 +32,7 @@ namespace kursach
         /// <param name="m"> Matrix, stored in sparse format</param>
         /// <param name="b"> Vector, that multiplies matrix </param>
         /// <returns> Resulting vector of multiplication </returns>
-        public static double[] MatMul(Matrix m, double[] b)
+        public static double[] MatrixMultiply(Matrix m, double[] b)
         {
             if (m.Size != b.Length)
             {
