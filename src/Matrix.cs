@@ -1,35 +1,37 @@
-﻿using static System.Math;
+﻿using System.Drawing;
+using static System.Math;
     
 namespace kursach;
 
 /// <summary>
-/// Матрица в разреженно-строчном формате
+/// Матрица в разреженно-строчном формате (CSR)
+/// 
 /// </summary>
 public class Matrix
 {
     /// <summary>
-    ///     al is for elements of lower triangular part of matrix
+    /// Массив ненулевых элементов нижнего треугольника матрицы по строкам
     /// </summary>
     /// <returns></returns>
     public double[] Ggl;
 
     /// <summary>
-    ///     au is for elements of upper triangular part of matrix
+    /// Массив ненулевых элементов верхнего треугольника матрицы по столбцам
     /// </summary>
     public double[] Ggu;
 
-    /// di is for diagonal elements
+    /// Массив диагональных элементов матрицы 
     public readonly double[] Di;
 
     /// <summary>
-    ///     ia is for profile matrix. i.e. by manipulating ia elements we can use our matrix
-    ///     much more time and memory efficient
+    /// Массив номеров элементов матриц Ggl и Ggu, с которых начинается i-ая строка нижнего треугольника
+    /// и i-ый стобец верхнего треугольника матрицы
+    /// Длина массива N+1, где N - размерность матрицы А
     /// </summary>
     public int[] Ig;
 
     /// <summary>
-    ///     Ja is for profile matrix. i.e. by manipulating ia elements we can use our matrix
-    ///     much more time and memory efficient
+    /// 
     /// </summary>
     public int[] Jg;
 
@@ -56,15 +58,17 @@ public class Matrix
     }
 
     /// <summary>
-    /// Stores info about LU decomposed or not
+    /// Было LU-разложение или нет  
     /// </summary>
     public bool Decomposed { get; private set; }
 
+    /// <summary>
+    /// Размерность матрицы
+    /// </summary>
     public int Size { get; }
 
     /// <summary>
-    /// LU(sq)-decomposition with value=1 in diagonal elements of U matrix.
-    /// Corrupts base object. To access data as one matrix you need to build it from L and U.
+    /// LU-разложение матрицы. Она изменяет сам объект, а не создает его копию
     /// </summary>
     /// <exception cref="DivideByZeroException"> If diagonal element is zero </exception>
     public void Factorize()

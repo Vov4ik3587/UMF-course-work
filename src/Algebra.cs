@@ -54,10 +54,17 @@ namespace kursach
 
             return res;
         }
-        // Добавить Сложение, произведение матриц в разреженном формате
 
         // TODO: Страница кирпича 217 
-                    // Вычисление мю(i)
-                    // Вычисление ню(i)
+        public static int Myu(int i)
+        {
+            return (i - 1) % 3 + 1;
+        }
+
+        public static int Nyu(int i)
+        {
+            return (i - 1) / 3 + 1;
+        }
+        
     }
 }
