@@ -3,6 +3,7 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
+#include <cmath>
 
 //ТУТ ПОЯСНИТЕЛЬНАЯ ЗАПИСКА//
 /*В файле input.txt задаётся расчётная область: граничные точки по х, граничные точки по у, количество узлов по х, количество узлов по у
@@ -14,20 +15,20 @@
 class slae
 {
 private:
-    int _nx; // количество узлов по оси х
-    int _ny; // количество узлов по оси у
+    int _nx;              // количество узлов по оси х
+    int _ny;              // количество узлов по оси у
     std::vector<int> _ig; // Профиль глобальной матрицы
     std::vector<int> _jg;
-    std::vector<double> _al; //Нижний треугольник матрицы
-    std::vector<double> _au; //Верхний треугольник матрицы
-    std::vector<double> _di; //Диагональные элементы матрицы
-    std::vector<std::vector<double>> _LocMass; //Локальная матрица масс
+    std::vector<double> _al;                             //Нижний треугольник матрицы
+    std::vector<double> _au;                             //Верхний треугольник матрицы
+    std::vector<double> _di;                             //Диагональные элементы матрицы
+    std::vector<std::vector<double>> _LocMass;           //Локальная матрица масс
     std::vector<std::vector<std::vector<double>>> _LocG; // Локальная матрицы жёсткости
-    std::vector<std::vector<double>> _Grid; //Пронумерованные точки в узлах сетки
-    std::vector<double> _time; //Сетка по времени
+    std::vector<std::vector<double>> _Grid;              //Пронумерованные точки в узлах сетки
+    std::vector<double> _time;                           //Сетка по времени
     std::vector<std::vector<std::vector<int>>> _ElBonds; // Связи узлов и элементов
     std::vector<std::vector<int>> _NodeBonds;
-    std::vector<double> _GlobB; //Вектор правой части
+    std::vector<double> _GlobB;          //Вектор правой части
     std::vector<std::vector<double>> _Q; //Вектор решения СЛАУ (коэффициенты разложения искомой функции по биквадратичному базису)
 public:
     slae()
@@ -45,7 +46,7 @@ public:
         this->_ElBonds = std::vector<std::vector<std::vector<int>>>();
         this->_NodeBonds = std::vector<std::vector<int>>();
         this->_GlobB = std::vector<double>();
-        this->_Q = std::vector <std::vector<double>> ();
+        this->_Q = std::vector<std::vector<double>>();
         this->_time = std::vector<double>();
     }
     /*void LoadData()
@@ -61,7 +62,6 @@ public:
        }
        Grid.close();
     }*/
-
 
     //Вовзращает значение функции правой части уравнение в точке
     double f(double x, double y, double t)
@@ -92,30 +92,30 @@ public:
     }
 
     //Возвращает значение функции Тета во втором краевом условии
-    double theta(double x, double y,int Border, double t)
+    double theta(double x, double y, int Border, double t)
     {
         switch (Border)
         {
-            case 0:
-            {
-                return -3.0;
-                break;
-            }
-            case 1:
-            {
-                return -2.;
-                break;
-            }
-            case 2:
-            {
-                return 4.0;
-                break;
-            }
-            case 3:
-            {
-                return 0.0;
-                break;
-            }
+        case 0:
+        {
+            return -3.0;
+            break;
+        }
+        case 1:
+        {
+            return -2.;
+            break;
+        }
+        case 2:
+        {
+            return 4.0;
+            break;
+        }
+        case 3:
+        {
+            return 0.0;
+            break;
+        }
         }
     }
 
@@ -130,26 +130,26 @@ public:
     {
         switch (Border)
         {
-            case 0:
-            {
-                return x*x - 4.;
-                break;
-            }
-            case 1:
-            {
-                return 0.0;
-                break;
-            }
-            case 2:
-            {
-                return 3.0;
-                break;
-            }
-            case 3:
-            {
-                return x;
-                break;
-            }
+        case 0:
+        {
+            return x * x - 4.;
+            break;
+        }
+        case 1:
+        {
+            return 0.0;
+            break;
+        }
+        case 2:
+        {
+            return 3.0;
+            break;
+        }
+        case 3:
+        {
+            return x;
+            break;
+        }
         }
     }
 
@@ -158,33 +158,32 @@ public:
     {
         switch (Border)
         {
-            case 0:
-            {
-                return t;
-                break;
-            }
-            case 1:
-            {
-                return t;
-                break;
-            }
-            case 2:
-            {
-                return t;
-                break;
-            }
-            case 3:
-            {
-                return t;
-                break;
-            }
+        case 0:
+        {
+            return t;
+            break;
+        }
+        case 1:
+        {
+            return t;
+            break;
+        }
+        case 2:
+        {
+            return t;
+            break;
+        }
+        case 3:
+        {
+            return t;
+            break;
+        }
         }
     }
 
     //Возвращает значение искомой функции в точке для проверки точности решения
     double U(double x, double y, double t)
     {
-
         return t;
     }
 
@@ -407,7 +406,6 @@ public:
         for (int i = 0; i < 2; i++)
         {
             LocGPsi[i].resize(3);
-
         }
 
         //Матрица для x/y
@@ -505,7 +503,7 @@ public:
         }
     }
 
-    void three_layer_global_bild(double t0, double t1, double t2)
+    void three_layer_global_build(double t0, double t1, double t2)
     {
         double gamma = 0.;
         double sigma = 0.;
@@ -553,7 +551,7 @@ public:
 
             for (int k = 0; k < 9; k++)
             {
-                _di[_ElBonds[0][i][k]] += 2. * khi * _LocMass[k][k] / (dt * dt0) +  sigma * dt1 * _LocMass[k][k] / (dt0 * dt);
+                _di[_ElBonds[0][i][k]] += 2. * khi * _LocMass[k][k] / (dt * dt0) + sigma * dt1 * _LocMass[k][k] / (dt0 * dt);
             }
 
             int Index;
@@ -569,79 +567,7 @@ public:
         }
     }
 
-    void four_layer_global_build(int j)
-    {
-        double gamma = 0.;
-        double sigma = 0.;
-        double khi = 0.;
-
-        std::vector<double> loc_b = std::vector<double>(9);
-        std::vector<double> q_0 = std::vector<double>(9);
-        std::vector<double> q_1 = std::vector<double>(9);
-        std::vector<double> q_2 = std::vector<double>(9);
-        std::vector<double> q_2_G = std::vector<double>(9);
-        std::vector<std::vector<double>> loc_G;
-
-        double dt = _time[j] - _time[j - 1];
-        double dt0 = _time[j] - _time[j - 2];
-        double dt1 = _time[j] - _time[j - 3];
-        double dt2 = _time[j - 1] - _time[j - 2];
-        double dt3 = _time[j - 1] - _time[j - 3];
-        double dt4 = _time[j - 2] - _time[j-3];
-
-        std::fill(_al.begin(), _al.end(), 0);
-        std::fill(_au.begin(), _au.end(), 0);
-        std::fill(_GlobB.begin(), _GlobB.end(), 0);
-        for (int i = 0; i < (_nx - 1) * (_ny - 1); i++)
-        {
-            get_local_gamma(i, gamma);
-            get_local_sigma(i, sigma);
-            get_local_khi(i, khi);
-            get_local_f(loc_b, i, _time[j - 2]);
-
-            for (int k = 0; k < 9; k++)
-            {
-                q_0[k] = _Q[j - 3][_ElBonds[0][i][k]];
-                q_1[k] = _Q[j - 2][_ElBonds[0][i][k]];
-                q_2[k] = _Q[j - 1][_ElBonds[0][i][k]];
-            }
-
-            q_2_G = q_2;
-            mass_mx_mult_vec(loc_b);
-            mass_mx_mult_vec(q_0);
-            mass_mx_mult_vec(q_1);
-            mass_mx_mult_vec(q_2);
-            get_loc_G(i, loc_G);
-            stiffness_mx_mult_vec(q_2_G, loc_G);
-
-            for (int k = 0; k < 9; k++)
-            {
-                _GlobB[_ElBonds[0][i][k]] += loc_b[k] -
-                                             khi * ((2. * (dt - dt2) * q_0[k] / (dt1 * dt3 * dt4)) + (2. * q_1[k] * (dt3 - dt) / (dt4 * dt2 * dt0)) + (2. * q_2[k] * (dt - dt2 - dt3) / (dt * dt2 * dt3))) -
-                                             sigma * (((dt * dt2) * q_0[k] / (dt1 * dt3 * dt4)) - ((dt3 * dt) * q_1[k] / (dt0 * dt2 * dt4)) + ((dt * (dt2 + dt3) - dt2 * dt3) * q_2[k] / (dt * dt2 * dt3))) -
-                                             gamma * q_2[k] - q_2_G[k];
-
-            }
-
-            for (int k = 0; k < 9; k++)
-            {
-                _di[_ElBonds[0][i][k]] += khi * 2. * (dt2 + dt3) * _LocMass[k][k] / (dt* dt0 * dt1) + sigma * (dt3 * dt2) * _LocMass[k][k] / (dt * dt0 * dt1);
-            }
-
-            int Index;
-            for (int k = 1; k < 9; k++)
-            {
-                for (int j = 0; j < k; j++)
-                {
-                    get_index(_ElBonds[0][i][k], _ElBonds[0][i][j], Index);
-                    _al[Index] += khi * 2. * (dt2 + dt3) * _LocMass[k][j] / (dt * dt0 * dt1) + sigma * (dt3 * dt2) * _LocMass[k][j] / (dt * dt0 * dt1);
-                    _au[Index] += khi * 2. * (dt2 + dt3) * _LocMass[k][j] / (dt * dt0 * dt1) + sigma * (dt3 * dt2) * _LocMass[k][j] / (dt * dt0 * dt1);
-                }
-            }
-        }
-    }
-
-    void stiffness_mx_mult_vec(std::vector<double>& vec, std::vector<std::vector<double>> LocG)
+    void stiffness_mx_mult_vec(std::vector<double> &vec, std::vector<std::vector<double>> LocG)
     {
         std::vector<double> res = std::vector<double>(9);
         for (int i = 0; i < 9; i++)
@@ -657,7 +583,7 @@ public:
     }
 
     //Вовзращает положение элемента в векторах al/au для его вставки в глобальную матрицу
-    void get_index(int i, int j, int& Index)
+    void get_index(int i, int j, int &Index)
     {
         Index = _ig[i];
         while (_jg[Index] != j)
@@ -667,7 +593,7 @@ public:
     }
 
     //Собирает из локальных матриц жёсткости, полученных в ходе разложение коэффициента диффузии по билинейным базисным функциям
-    void get_loc_G(int num, std::vector<std::vector<double>>& LocG)
+    void get_loc_G(int num, std::vector<std::vector<double>> &LocG)
     {
         std::vector<double> LocPhiLam = std::vector<double>(4);
         get_loc_lam(num, LocPhiLam);
@@ -677,16 +603,13 @@ public:
             LocG[i].resize(9);
             for (int j = 0; j < 9; j++)
             {
-                LocG[i][j] = LocPhiLam[0] * _LocG[0][i][j]
-                             + LocPhiLam[1] * _LocG[1][i][j]
-                             + LocPhiLam[2] * _LocG[2][i][j]
-                             + LocPhiLam[3] * _LocG[3][i][j];
+                LocG[i][j] = LocPhiLam[0] * _LocG[0][i][j] + LocPhiLam[1] * _LocG[1][i][j] + LocPhiLam[2] * _LocG[2][i][j] + LocPhiLam[3] * _LocG[3][i][j];
             }
         }
     }
 
     //Возвращает коэффициенты разложения коэффициента диффузии по билинейным базисным функциям
-    void get_loc_lam(int num, std::vector<double>& LocPhiLam)
+    void get_loc_lam(int num, std::vector<double> &LocPhiLam)
     {
         for (int i = 0; i < 4; i++)
         {
@@ -696,7 +619,7 @@ public:
     }
 
     //Возвращают усреднённые коэффициенты при матрице масс для элемента
-    void get_local_gamma(int num, double& gam)
+    void get_local_gamma(int num, double &gam)
     {
         double hx, hy;
         double g = 0.0;
@@ -709,7 +632,7 @@ public:
         gam = g / 9.;
     }
 
-    void get_local_sigma(int num, double& sig)
+    void get_local_sigma(int num, double &sig)
     {
         double hx, hy;
         double s = 0.0;
@@ -722,7 +645,7 @@ public:
         sig = s / 9.;
     }
 
-    void get_local_khi(int num, double& kh)
+    void get_local_khi(int num, double &kh)
     {
         double hx, hy;
         double k = 0.0;
@@ -736,7 +659,7 @@ public:
     }
 
     //Умножает вектор на матрицу масс для вставки в правую часть СЛАУ
-    void mass_mx_mult_vec(std::vector<double>& f)
+    void mass_mx_mult_vec(std::vector<double> &f)
     {
         std::vector<double> res = std::vector<double>(9);
         for (int i = 0; i < 9; i++)
@@ -752,7 +675,7 @@ public:
     }
 
     //Получает вектор локальных значений правой части на конечном элементе
-    void get_local_f(std::vector<double>& LocB, int num, double t)
+    void get_local_f(std::vector<double> &LocB, int num, double t)
     {
         double hx, hy;
         hx = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]) / 2.;
@@ -783,133 +706,133 @@ public:
         {
             switch (Border)
             {
-                case 0:
+            case 0:
+            {
+                std::vector<double> LocTheta = std::vector<double>(3);
+                int num;
+                for (int i = 0; i < (_ny - 1); i++)
                 {
-                    std::vector<double> LocTheta = std::vector<double>(3);
-                    int num;
-                    for (int i = 0; i < (_ny - 1); i++)
-                    {
-                        num = i * (_nx - 1);
-                        double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
-                        get_local_theta(num, h / 2.0, Border, LocTheta, t);
-                        _GlobB[_ElBonds[0][num][0]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][3]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][6]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
-                    }
-                    break;
+                    num = i * (_nx - 1);
+                    double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
+                    get_local_theta(num, h / 2.0, Border, LocTheta, t);
+                    _GlobB[_ElBonds[0][num][0]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][3]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][6]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
                 }
-                case 1:
+                break;
+            }
+            case 1:
+            {
+                std::vector<double> LocTheta = std::vector<double>(3);
+                int num;
+                for (int i = 0; i < (_nx - 1); i++)
                 {
-                    std::vector<double> LocTheta = std::vector<double>(3);
-                    int num;
-                    for (int i = 0; i < (_nx - 1); i++)
-                    {
-                        num = i;
-                        double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
-                        get_local_theta(num, h / 2., Border, LocTheta, t);
-                        _GlobB[_ElBonds[0][num][0]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][1]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][2]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
-                    }
-                    break;
+                    num = i;
+                    double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
+                    get_local_theta(num, h / 2., Border, LocTheta, t);
+                    _GlobB[_ElBonds[0][num][0]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][1]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][2]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
                 }
-                case 2:
+                break;
+            }
+            case 2:
+            {
+                std::vector<double> LocTheta = std::vector<double>(3);
+                int num;
+                for (int i = 0; i < (_ny - 1); i++)
                 {
-                    std::vector<double> LocTheta = std::vector<double>(3);
-                    int num;
-                    for (int i = 0; i < (_ny - 1); i++)
-                    {
-                        num = i * (_nx - 1) + _ny - 2;
-                        double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
-                        get_local_theta(num, h / 2., Border, LocTheta, t);
-                        _GlobB[_ElBonds[0][num][2]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][5]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][8]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
-                    }
-                    break;
+                    num = i * (_nx - 1) + _ny - 2;
+                    double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
+                    get_local_theta(num, h / 2., Border, LocTheta, t);
+                    _GlobB[_ElBonds[0][num][2]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][5]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][8]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
                 }
-                case 3:
+                break;
+            }
+            case 3:
+            {
+                std::vector<double> LocTheta = std::vector<double>(3);
+                int num;
+                for (int i = 0; i < (_nx - 1); i++)
                 {
-                    std::vector<double> LocTheta = std::vector<double>(3);
-                    int num;
-                    for (int i = 0; i < (_nx - 1); i++)
-                    {
-                        num = i + (_nx - 1) * (_ny - 2);
-                        double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
-                        get_local_theta(num, h / 2., Border, LocTheta, t);
-                        _GlobB[_ElBonds[0][num][6]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][7]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][8]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
-                    }
-                    break;
+                    num = i + (_nx - 1) * (_ny - 2);
+                    double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
+                    get_local_theta(num, h / 2., Border, LocTheta, t);
+                    _GlobB[_ElBonds[0][num][6]] += h * (4. * LocTheta[0] + 2. * LocTheta[1] - LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][7]] += h * (2. * LocTheta[0] + 16. * LocTheta[1] + 2. * LocTheta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][8]] += h * (-1. * LocTheta[0] + 2. * LocTheta[1] + 4. * LocTheta[2]) / 30.;
                 }
+                break;
+            }
             }
         }
     }
 
     //Возвращает локальный вектор значений функции тета на ребре при учёте второго краевого условия
-    void get_local_theta(int num, double h, int Border, std::vector<double>& LocTheta, double t)
+    void get_local_theta(int num, double h, int Border, std::vector<double> &LocTheta, double t)
     {
 
         for (int i = 0; i < 3; i++)
         {
             switch (Border)
             {
-                case 0:
-                {
-                    LocTheta[i] = theta(_Grid[_ElBonds[1][num][0]][0], _Grid[_ElBonds[1][num][0]][1] + h * i, Border, t);
-                    break;
-                }
-                case 1:
-                {
-                    LocTheta[i] = theta(_Grid[_ElBonds[1][num][0]][0] + h * i, _Grid[_ElBonds[1][num][0]][1], Border, t);
-                    break;
-                }
-                case 2:
-                {
-                    LocTheta[i] = theta(_Grid[_ElBonds[1][num][1]][0], _Grid[_ElBonds[1][num][1]][1] + h * i, Border, t);
-                    break;
-                }
-                case 3:
-                {
-                    LocTheta[i] = theta(_Grid[_ElBonds[1][num][2]][0] + h * i, _Grid[_ElBonds[1][num][2]][1], Border, t);
-                    break;
-                }
-                default:
-                    break;
+            case 0:
+            {
+                LocTheta[i] = theta(_Grid[_ElBonds[1][num][0]][0], _Grid[_ElBonds[1][num][0]][1] + h * i, Border, t);
+                break;
+            }
+            case 1:
+            {
+                LocTheta[i] = theta(_Grid[_ElBonds[1][num][0]][0] + h * i, _Grid[_ElBonds[1][num][0]][1], Border, t);
+                break;
+            }
+            case 2:
+            {
+                LocTheta[i] = theta(_Grid[_ElBonds[1][num][1]][0], _Grid[_ElBonds[1][num][1]][1] + h * i, Border, t);
+                break;
+            }
+            case 3:
+            {
+                LocTheta[i] = theta(_Grid[_ElBonds[1][num][2]][0] + h * i, _Grid[_ElBonds[1][num][2]][1], Border, t);
+                break;
+            }
+            default:
+                break;
             }
         }
     }
 
     //Возвращает локальный вектор значений функции Убета на ребре для учёта в третем краевом условии
-    void get_local_Ubeta(int num, double h, int Border, std::vector<double>& LocUbeta, double t)
+    void get_local_Ubeta(int num, double h, int Border, std::vector<double> &LocUbeta, double t)
     {
         for (int i = 0; i < 3; i++)
         {
             switch (Border)
             {
-                case 0:
-                {
-                    LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][0]][0], _Grid[_ElBonds[1][num][0]][1] + h * i, Border, t);
-                    break;
-                }
-                case 1:
-                {
-                    LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][0]][0] + h * i, _Grid[_ElBonds[1][num][0]][1], Border, t);
-                    break;
-                }
-                case 2:
-                {
-                    LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][1]][0], _Grid[_ElBonds[1][num][1]][1] + h * i, Border, t);
-                    break;
-                }
-                case 3:
-                {
-                    LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][2]][0] + h * i, _Grid[_ElBonds[1][num][2]][1], Border, t);
-                    break;
-                }
-                default:
-                    break;
+            case 0:
+            {
+                LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][0]][0], _Grid[_ElBonds[1][num][0]][1] + h * i, Border, t);
+                break;
+            }
+            case 1:
+            {
+                LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][0]][0] + h * i, _Grid[_ElBonds[1][num][0]][1], Border, t);
+                break;
+            }
+            case 2:
+            {
+                LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][1]][0], _Grid[_ElBonds[1][num][1]][1] + h * i, Border, t);
+                break;
+            }
+            case 3:
+            {
+                LocUbeta[i] = Ubeta(_Grid[_ElBonds[1][num][2]][0] + h * i, _Grid[_ElBonds[1][num][2]][1], Border, t);
+                break;
+            }
+            default:
+                break;
             }
         }
     }
@@ -945,70 +868,70 @@ public:
         {
             switch (Border)
             {
-                case 0:
+            case 0:
+            {
+                int num;
+                for (int i = 0; i < (_ny - 1); i++)
                 {
-                    int num;
-                    for (int i = 0; i < (_ny - 1); i++)
-                    {
-                        num = i * (_nx - 1);
-                        double bet = beta();
-                        double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
-                        insert_loc_bond_A(num, h, Border, LocBondA);
-                        get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
-                        _GlobB[_ElBonds[0][num][0]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][3]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][6]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
-                    }
-                    break;
+                    num = i * (_nx - 1);
+                    double bet = beta();
+                    double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
+                    insert_loc_bond_A(num, h, Border, LocBondA);
+                    get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
+                    _GlobB[_ElBonds[0][num][0]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][3]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][6]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
                 }
-                case 1:
+                break;
+            }
+            case 1:
+            {
+                int num;
+                for (int i = 0; i < (_nx - 1); i++)
                 {
-                    int num;
-                    for (int i = 0; i < (_nx - 1); i++)
-                    {
-                        num = i;
-                        double bet = beta();
-                        double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
-                        insert_loc_bond_A(num, h, Border, LocBondA);
-                        get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
-                        _GlobB[_ElBonds[0][num][0]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][1]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][2]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
-                    }
-                    break;
+                    num = i;
+                    double bet = beta();
+                    double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
+                    insert_loc_bond_A(num, h, Border, LocBondA);
+                    get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
+                    _GlobB[_ElBonds[0][num][0]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][1]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][2]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
                 }
-                case 2:
+                break;
+            }
+            case 2:
+            {
+                int num;
+                for (int i = 0; i < (_ny - 1); i++)
                 {
-                    int num;
-                    for (int i = 0; i < (_ny - 1); i++)
-                    {
-                        num = i * (_nx - 1) + _nx - 2;
-                        double bet = beta();
-                        double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
-                        insert_loc_bond_A(num, h, Border, LocBondA);
-                        get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
-                        _GlobB[_ElBonds[0][num][2]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][5]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][8]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
-                    }
-                    break;
+                    num = i * (_nx - 1) + _nx - 2;
+                    double bet = beta();
+                    double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]);
+                    insert_loc_bond_A(num, h, Border, LocBondA);
+                    get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
+                    _GlobB[_ElBonds[0][num][2]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][5]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][8]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
                 }
-                case 3:
+                break;
+            }
+            case 3:
+            {
+                int num;
+                for (int i = 0; i < (_nx - 1); i++)
                 {
-                    int num;
-                    for (int i = 0; i < (_nx - 1); i++)
-                    {
-                        num = i + (_nx - 1) * (_ny - 2);
-                        double bet = beta();
-                        double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
-                        insert_loc_bond_A(num, h, Border, LocBondA);
-                        get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
-                        _GlobB[_ElBonds[0][num][6]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][7]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
-                        _GlobB[_ElBonds[0][num][8]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
-                    }
-                    break;
+                    num = i + (_nx - 1) * (_ny - 2);
+                    double bet = beta();
+                    double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]);
+                    insert_loc_bond_A(num, h, Border, LocBondA);
+                    get_local_Ubeta(num, h / 2., Border, LocUbeta, t);
+                    _GlobB[_ElBonds[0][num][6]] += h * bet * (4. * LocUbeta[0] + 2. * LocUbeta[1] - LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][7]] += h * bet * (2. * LocUbeta[0] + 16. * LocUbeta[1] + 2. * LocUbeta[2]) / 30.;
+                    _GlobB[_ElBonds[0][num][8]] += h * bet * (-1. * LocUbeta[0] + 2. * LocUbeta[1] + 4. * LocUbeta[2]) / 30.;
                 }
+                break;
+            }
             }
         }
     }
@@ -1018,78 +941,78 @@ public:
     {
         switch (Border)
         {
-            case 0:
+        case 0:
+        {
+            double bet = beta();
+            _di[_ElBonds[0][num][0]] += h * bet * LocBondA[0][0];
+            _di[_ElBonds[0][num][3]] += h * bet * LocBondA[1][1];
+            _di[_ElBonds[0][num][6]] += h * bet * LocBondA[2][2];
+            int Index;
+            for (int i = 1; i < 3; i++)
             {
-                double bet = beta();
-                _di[_ElBonds[0][num][0]] += h * bet * LocBondA[0][0];
-                _di[_ElBonds[0][num][3]] += h * bet * LocBondA[1][1];
-                _di[_ElBonds[0][num][6]] += h * bet * LocBondA[2][2];
-                int Index;
-                for (int i = 1; i < 3; i++)
+                for (int j = 0; j < i; j++)
                 {
-                    for (int j = 0; j < i; j++)
-                    {
-                        get_index(_ElBonds[0][num][i*3], _ElBonds[0][num][3*j], Index);
-                        _al[Index] += h * bet * LocBondA[i][j];
-                        _au[Index] += h * bet * LocBondA[i][j];
-                    }
+                    get_index(_ElBonds[0][num][i * 3], _ElBonds[0][num][3 * j], Index);
+                    _al[Index] += h * bet * LocBondA[i][j];
+                    _au[Index] += h * bet * LocBondA[i][j];
                 }
-                break;
             }
-            case 1:
+            break;
+        }
+        case 1:
+        {
+            double bet = beta();
+            _di[_ElBonds[0][num][0]] += h * bet * LocBondA[0][0];
+            _di[_ElBonds[0][num][1]] += h * bet * LocBondA[1][1];
+            _di[_ElBonds[0][num][2]] += h * bet * LocBondA[2][2];
+            int Index;
+            for (int i = 1; i < 3; i++)
             {
-                double bet = beta();
-                _di[_ElBonds[0][num][0]] += h * bet * LocBondA[0][0];
-                _di[_ElBonds[0][num][1]] += h * bet * LocBondA[1][1];
-                _di[_ElBonds[0][num][2]] += h * bet * LocBondA[2][2];
-                int Index;
-                for (int i = 1; i < 3; i++)
+                for (int j = 0; j < i; j++)
                 {
-                    for (int j = 0; j < i; j++)
-                    {
-                        get_index(_ElBonds[0][num][i], _ElBonds[0][num][j], Index);
-                        _al[Index] += h * bet * LocBondA[i][j];
-                        _au[Index] += h * bet * LocBondA[i][j];
-                    }
+                    get_index(_ElBonds[0][num][i], _ElBonds[0][num][j], Index);
+                    _al[Index] += h * bet * LocBondA[i][j];
+                    _au[Index] += h * bet * LocBondA[i][j];
                 }
-                break;
             }
-            case 2:
+            break;
+        }
+        case 2:
+        {
+            double bet = beta();
+            _di[_ElBonds[0][num][2]] += h * bet * LocBondA[0][0];
+            _di[_ElBonds[0][num][5]] += h * bet * LocBondA[1][1];
+            _di[_ElBonds[0][num][8]] += h * bet * LocBondA[2][2];
+            int Index;
+            for (int i = 1; i < 3; i++)
             {
-                double bet = beta();
-                _di[_ElBonds[0][num][2]] += h * bet * LocBondA[0][0];
-                _di[_ElBonds[0][num][5]] += h * bet * LocBondA[1][1];
-                _di[_ElBonds[0][num][8]] += h * bet * LocBondA[2][2];
-                int Index;
-                for (int i = 1; i < 3; i++)
+                for (int j = 0; j < i; j++)
                 {
-                    for (int j = 0; j < i; j++)
-                    {
-                        get_index(_ElBonds[0][num][3*i + 2], _ElBonds[0][num][3*j + 2], Index);
-                        _al[Index] += h * bet * LocBondA[i][j];
-                        _au[Index] += h * bet * LocBondA[i][j];
-                    }
+                    get_index(_ElBonds[0][num][3 * i + 2], _ElBonds[0][num][3 * j + 2], Index);
+                    _al[Index] += h * bet * LocBondA[i][j];
+                    _au[Index] += h * bet * LocBondA[i][j];
                 }
-                break;
             }
-            case 3:
+            break;
+        }
+        case 3:
+        {
+            double bet = beta();
+            _di[_ElBonds[0][num][6]] += h * bet * LocBondA[0][0];
+            _di[_ElBonds[0][num][7]] += h * bet * LocBondA[1][1];
+            _di[_ElBonds[0][num][8]] += h * bet * LocBondA[2][2];
+            int Index;
+            for (int i = 1; i < 3; i++)
             {
-                double bet = beta();
-                _di[_ElBonds[0][num][6]] += h * bet * LocBondA[0][0];
-                _di[_ElBonds[0][num][7]] += h * bet * LocBondA[1][1];
-                _di[_ElBonds[0][num][8]] += h * bet * LocBondA[2][2];
-                int Index;
-                for (int i = 1; i < 3; i++)
+                for (int j = 0; j < i; j++)
                 {
-                    for (int j = 0; j < i; j++)
-                    {
-                        get_index(_ElBonds[0][num][6 + i], _ElBonds[0][num][6 + j], Index);
-                        _al[Index] += h * bet * LocBondA[i][j];
-                        _au[Index] += h * bet * LocBondA[i][j];
-                    }
+                    get_index(_ElBonds[0][num][6 + i], _ElBonds[0][num][6 + j], Index);
+                    _al[Index] += h * bet * LocBondA[i][j];
+                    _au[Index] += h * bet * LocBondA[i][j];
                 }
-                break;
             }
+            break;
+        }
         }
     }
 
@@ -1110,82 +1033,82 @@ public:
         {
             switch (Border)
             {
-                case 0:
+            case 0:
+            {
+                int num;
+                double C = 1e+30;
+                for (int i = 0; i < (_ny - 1); i++)
                 {
-                    int num;
+                    num = i * (_nx - 1);
+                    double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]) / 2.0;
+                    double Ugi;
+                    for (int j = 0; j < 3; j++)
+                    {
+                        Ugi = Ug(_Grid[_ElBonds[1][num][0]][0], _Grid[_ElBonds[1][num][0]][1] + h * j, Border, t);
+                        nullify_str(_ElBonds[0][num][3 * j], Ugi);
+                        _di[_ElBonds[0][num][3 * j]] = 1.;
+                        _GlobB[_ElBonds[0][num][3 * j]] = Ugi;
+                    }
+                }
+                break;
+            }
+            case 1:
+            {
+                int num;
+                for (int i = 0; i < (_nx - 1); i++)
+                {
+                    num = i;
+                    double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]) / 2.0;
+                    double Ugi;
                     double C = 1e+30;
-                    for (int i = 0; i < (_ny - 1); i++)
+                    for (int j = 0; j < 3; j++)
                     {
-                        num = i * (_nx - 1);
-                        double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]) / 2.0;
-                        double Ugi;
-                        for (int j = 0; j < 3; j++)
-                        {
-                            Ugi = Ug(_Grid[_ElBonds[1][num][0]][0], _Grid[_ElBonds[1][num][0]][1] + h * j, Border, t);
-                            nullify_str(_ElBonds[0][num][3 * j], Ugi);
-                            _di[_ElBonds[0][num][3 * j]] = 1.;
-                            _GlobB[_ElBonds[0][num][3 * j]] = Ugi;
-                        }
+                        Ugi = Ug(_Grid[_ElBonds[1][num][0]][0] + h * j, _Grid[_ElBonds[1][num][0]][1], Border, t);
+                        nullify_str(_ElBonds[0][num][j], Ugi);
+                        _di[_ElBonds[0][num][j]] = 1.;
+                        _GlobB[_ElBonds[0][num][j]] = _di[_ElBonds[0][num][j]] * Ugi;
                     }
-                    break;
                 }
-                case 1:
+                break;
+            }
+            case 2:
+            {
+                int num;
+                for (int i = 0; i < (_ny - 1); i++)
                 {
-                    int num;
-                    for (int i = 0; i < (_nx - 1); i++)
+                    num = i * (_nx - 1) + _nx - 2;
+                    double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]) / 2.0;
+                    double Ugi;
+                    double C = 1e+30;
+                    for (int j = 0; j < 3; j++)
                     {
-                        num = i;
-                        double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]) / 2.0;
-                        double Ugi;
-                        double C = 1e+30;
-                        for (int j = 0; j < 3; j++)
-                        {
-                            Ugi = Ug(_Grid[_ElBonds[1][num][0]][0] + h * j, _Grid[_ElBonds[1][num][0]][1], Border, t);
-                            nullify_str(_ElBonds[0][num][j], Ugi);
-                            _di[_ElBonds[0][num][j]] = 1.;
-                            _GlobB[_ElBonds[0][num][j]] = _di[_ElBonds[0][num][j]] * Ugi;
-                        }
+                        Ugi = Ug(_Grid[_ElBonds[1][num][1]][0], _Grid[_ElBonds[1][num][1]][1] + h * j, Border, t);
+                        nullify_str(_ElBonds[0][num][3 * j + 2], Ugi);
+                        _di[_ElBonds[0][num][3 * j + 2]] = 1.;
+                        _GlobB[_ElBonds[0][num][3 * j + 2]] = _di[_ElBonds[0][num][3 * j + 2]] * Ugi;
                     }
-                    break;
                 }
-                case 2:
+                break;
+            }
+            case 3:
+            {
+                int num;
+                for (int i = 0; i < (_nx - 1); i++)
                 {
-                    int num;
-                    for (int i = 0; i < (_ny - 1); i++)
+                    num = i + (_nx - 1) * (_ny - 2);
+                    double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]) / 2.0;
+                    double Ugi;
+                    double C = 1e+30;
+                    for (int j = 0; j < 3; j++)
                     {
-                        num = i * (_nx - 1) + _nx - 2;
-                        double h = (_Grid[_ElBonds[1][num][2]][1] - _Grid[_ElBonds[1][num][0]][1]) / 2.0;
-                        double Ugi;
-                        double C = 1e+30;
-                        for (int j = 0; j < 3; j++)
-                        {
-                            Ugi = Ug(_Grid[_ElBonds[1][num][1]][0], _Grid[_ElBonds[1][num][1]][1] + h * j, Border, t);
-                            nullify_str(_ElBonds[0][num][3 * j + 2], Ugi);
-                            _di[_ElBonds[0][num][3 * j + 2]] = 1.;
-                            _GlobB[_ElBonds[0][num][3 * j + 2]] = _di[_ElBonds[0][num][3 * j + 2]]*Ugi;
-                        }
+                        Ugi = Ug(_Grid[_ElBonds[1][num][2]][0] + h * j, _Grid[_ElBonds[1][num][2]][1], Border, t);
+                        nullify_str(_ElBonds[0][num][6 + j], Ugi);
+                        _di[_ElBonds[0][num][6 + j]] = 1.;
+                        _GlobB[_ElBonds[0][num][6 + j]] = _di[_ElBonds[0][num][6 + j]] * Ugi;
                     }
-                    break;
                 }
-                case 3:
-                {
-                    int num;
-                    for (int i = 0; i < (_nx - 1); i++)
-                    {
-                        num = i + (_nx - 1) * (_ny - 2);
-                        double h = (_Grid[_ElBonds[1][num][1]][0] - _Grid[_ElBonds[1][num][0]][0]) / 2.0;
-                        double Ugi;
-                        double C = 1e+30;
-                        for (int j = 0; j < 3; j++)
-                        {
-                            Ugi = Ug(_Grid[_ElBonds[1][num][2]][0] + h * j, _Grid[_ElBonds[1][num][2]][1], Border, t);
-                            nullify_str(_ElBonds[0][num][6 + j], Ugi);
-                            _di[_ElBonds[0][num][6 + j]] = 1.;
-                            _GlobB[_ElBonds[0][num][6 + j]] = _di[_ElBonds[0][num][6 + j]] *Ugi;
-                        }
-                    }
-                    break;
-                }
+                break;
+            }
             }
         }
         /*print_(_di, _au, _al);
@@ -1203,7 +1126,6 @@ public:
         {
             _al[i] = 0.;
         }
-
 
         for (int i = Node; i < (2 * _nx - 1) * (2 * _ny - 1); i++)
         {
@@ -1223,7 +1145,7 @@ public:
     }
 
     //Факторизация матрицы методом LUsq для решения СЛАУ
-    void LUsq(std::vector<double>& _dif, std::vector<double>& ggl_f, std::vector<double>& ggu_f)
+    void LUsq(std::vector<double> &_dif, std::vector<double> &ggl_f, std::vector<double> &ggu_f)
     {
         for (int i = 0; i < (2 * _nx - 1) * (2 * _ny - 1); i++)
         {
@@ -1232,14 +1154,12 @@ public:
             int i0 = _ig[i];
             int i1 = _ig[i + 1];
 
-
             for (int k = i0; k < i1; k++)
             {
                 int j = _jg[k];
                 int j0 = _ig[j];
 
                 int j1 = _ig[j + 1];
-
 
                 int ik = i0;
                 int kj = j0;
@@ -1270,11 +1190,11 @@ public:
 
             _dif[i] = sqrt(_dif[i] - sumdi);
         }
-        //print_(_dif, ggu_f, ggl_f);
+        // print_(_dif, ggu_f, ggl_f);
     }
 
     //Умножение матрицы на вектор
-    std::vector<double> mult(std::vector<double>& v)
+    std::vector<double> mult(std::vector<double> &v)
     {
         std::vector<double> res(v.size());
         for (int i = 0; i < v.size(); i++)
@@ -1307,8 +1227,9 @@ public:
         double error1 = error + 1;
         std::vector<double> z = LU_reverse(r, _dif, _auf);
         buf = mult(z);
-        std::vector<double> p = LU_direct(buf, _dif, _alf);;
-        while (error > 1e-15 && k < 1000 && abs((error - error1))>=1e-16)
+        std::vector<double> p = LU_direct(buf, _dif, _alf);
+        ;
+        while (error > 1e-15 && k < 1000 && abs((error - error1)) >= 1e-16)
         {
             double pp = scalar_prod(p, p);
             double pr = scalar_prod(p, r);
@@ -1339,7 +1260,7 @@ public:
     };
 
     //Прямой ход для ЛОС
-    std::vector<double> LU_direct(const std::vector<double>& b, std::vector<double>& _dif, std::vector<double>& _alf)
+    std::vector<double> LU_direct(const std::vector<double> &b, std::vector<double> &_dif, std::vector<double> &_alf)
     {
         std::vector<double> res = b;
 
@@ -1355,7 +1276,7 @@ public:
     }
 
     //Обратный ход для ЛОС
-    std::vector<double> LU_reverse(const std::vector<double>& b, std::vector<double>& _dif, std::vector<double>& ggu_f)
+    std::vector<double> LU_reverse(const std::vector<double> &b, std::vector<double> &_dif, std::vector<double> &ggu_f)
     {
         std::vector<double> res = b;
 
@@ -1369,7 +1290,7 @@ public:
     }
 
     //Скалярное произведение двух векторов
-    double scalar_prod(std::vector<double>& x, std::vector<double>& y)
+    double scalar_prod(std::vector<double> &x, std::vector<double> &y)
     {
         double res = 0.0;
         if (x.size() == y.size())
@@ -1390,7 +1311,7 @@ public:
     //Вывод матрицы для возможных проверок
     void print_mx(std::vector<double> di, std::vector<double> ggu, std::vector<double> ggl)
     {
-        std::vector <std::vector<double>> mat;
+        std::vector<std::vector<double>> mat;
         mat.resize((2 * _nx - 1) * (2 * _ny - 1));
         for (int i = 0; i < mat.size(); i++)
         {
@@ -1418,7 +1339,8 @@ public:
     void print_b()
     {
         int n = _GlobB.size();
-        std::cout << std::endl << "RhsVec" << std::endl;
+        std::cout << std::endl
+                  << "RhsVec" << std::endl;
         for (int i = 0; i < n; i++)
         {
             std::cout << _GlobB[i] << std::endl;
@@ -1432,20 +1354,24 @@ public:
         hx = (_Grid[_ElBonds[1][0][1]][0] - _Grid[_ElBonds[1][0][0]][0]) / 2.;
         hy = (_Grid[_ElBonds[1][0][2]][1] - _Grid[_ElBonds[1][0][0]][1]) / 2.;
         std::cout << "t = " << _time[j] << std::endl;
-        std::cout << std::setw(17) << "(x;y)" << " | " << std::setw(12) << "q(i)" << " | " << std::setw(12)
-                  << "u(i)" << " | " << std::setw(12)
-                  << "q(i) - u(i)" << " | " << std::endl;
+        std::cout << std::setw(17) << "(x;y)"
+                  << " | " << std::setw(12) << "q(i)"
+                  << " | " << std::setw(12)
+                  << "u(i)"
+                  << " | " << std::setw(12)
+                  << "q(i) - u(i)"
+                  << " | " << std::endl;
         std::cout << "__________________|______________|______________|______________|" << std::endl;
-        //for (int i = 0; i < (2*_nx - 1)*(2*_ny - 1); i++)
+        // for (int i = 0; i < (2*_nx - 1)*(2*_ny - 1); i++)
         //{
-        //   double x = _Grid[_ElBonds[1][0][0]][0] + hx * (i % (2 * _nx - 1));
-        //   double y = _Grid[_ElBonds[1][0][0]][1] + hy * (i / (2 * _ny - 1));
-        //   std::cout << "(" << std::setw(7) << x << ";"
-        //      << std::setw(7) << y << ")"
-        //      " | " << std::setw(12) << _Q[j][i] << " | " << std::setw(12)
-        //      << U(x, y, _time[j]) << " | " << std::setw(12) <<
-        //         _Q[j][i] - U(x, y, _time[j]) << " | " << std::endl;
-        //}
+        //    double x = _Grid[_ElBonds[1][0][0]][0] + hx * (i % (2 * _nx - 1));
+        //    double y = _Grid[_ElBonds[1][0][0]][1] + hy * (i / (2 * _ny - 1));
+        //    std::cout << "(" << std::setw(7) << x << ";"
+        //       << std::setw(7) << y << ")"
+        //       " | " << std::setw(12) << _Q[j][i] << " | " << std::setw(12)
+        //       << U(x, y, _time[j]) << " | " << std::setw(12) <<
+        //          _Q[j][i] - U(x, y, _time[j]) << " | " << std::endl;
+        // }
 
         double k = 0;
         for (int i = 0; i < 2 * _ny - 1; i++)
@@ -1456,9 +1382,9 @@ public:
                 double y = _Grid[_ElBonds[1][0][0]][1] + hy * i;
                 std::cout << "(" << std::setw(7) << x << ";"
                           << std::setw(7) << y << ")"
-                                                  " | " << std::setw(12) << _Q[j][k] << " | " << std::setw(12)
-                          << U(x, y, _time[j]) << " | " << std::setw(12) <<
-                          _Q[j][k] - U(x, y, _time[j]) << " | " << std::endl;
+                                                  " | "
+                          << std::setw(12) << _Q[j][k] << " | " << std::setw(12)
+                          << U(x, y, _time[j]) << " | " << std::setw(12) << _Q[j][k] - U(x, y, _time[j]) << " | " << std::endl;
                 k++;
             }
         }
@@ -1469,29 +1395,23 @@ public:
     {
         making_time_grid();
         making_initial_conds();
-        three_layer_global_bild(_time[0], _time[1], _time[2]);
-        //print_mx(_di, _au, _al);
-        //print_b();
+        three_layer_global_build(_time[0], _time[1], _time[2]);
+        // print_mx(_di, _au, _al);
+        // print_b();
         second_boundary(_time[2]);
         third_boundary(_time[2]);
         first_boundary(_time[2]);
-        //print_mx(_di, _au, _al);
-        //print_b();
+        // print_mx(_di, _au, _al);
+        // print_b();
         init_hyperbolic_approx(2);
         LoS_precond(2);
-        three_layer_global_bild(_time[1], _time[2], _time[3]);
+        three_layer_global_build(_time[1], _time[2], _time[3]);
         second_boundary(_time[3]);
         third_boundary(_time[3]);
         first_boundary(_time[3]);
         init_hyperbolic_approx(3);
         LoS_precond(3);
         print_error(2);
-        print_error(3);
-        four_layer_global_build(3);
-        second_boundary(_time[3]);
-        third_boundary(_time[3]);
-        first_boundary(_time[3]);
-        LoS_precond(3);
         print_error(3);
         /*int nt = _time.size();
         for (int j = 3; j < nt; j++)
@@ -1511,17 +1431,6 @@ public:
     }
 
     //Решаем
-    void solve_elliptic()
-    {
-        init_elliptic_approx();
-        double t = 0.;
-        elliptic_global_build(t);
-        second_boundary(t);
-        third_boundary(t);
-        first_boundary(t);
-        LoS_precond(0);
-        print_error(0);
-    }
 };
 
 int main()
@@ -1531,19 +1440,5 @@ int main()
     SLAE.making_grid(); //Загружаем область решения и разбиваем её на конечные элементы
     SLAE.set_profile(); //Инициализируем профиль глобальной матрицы
     SLAE.local_build(); //Собираем локальную матрицу
-    std::cout << "Choose type of problem:" << std::endl << "1)Elliptic" << std::endl << "2)Hyperbolic" << std::endl;
-    std::cin >> method;
-    switch (method)
-    {
-        case 1:
-        {
-            SLAE.solve_elliptic();
-            break;
-        }
-        case 2:
-        {
-            SLAE.solve_hyperbolic();
-            break;
-        }
-    }
+    SLAE.solve_hyperbolic();
 }
