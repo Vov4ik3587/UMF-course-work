@@ -1,3 +1,3 @@
-/home/vava/Study/UMF-course-work/5-semestr/cmake-build-debug/CMakeFiles/5-semestr.dir
+/home/vava/Study/UMF-course-work/5-semestr/cmake-build-debug/CMakeFiles/5_semestr.dir
 /home/vava/Study/UMF-course-work/5-semestr/cmake-build-debug/CMakeFiles/edit_cache.dir
 /home/vava/Study/UMF-course-work/5-semestr/cmake-build-debug/CMakeFiles/rebuild_cache.dir
