@@ -170,12 +170,12 @@ public:
         {
         case 0:
         {
-            return 1. + y * y;
+            return 1.;
             break;
         }
         case 1:
         {
-            return 1;
+            return 1.;
             break;
         }
         case 2:
@@ -185,7 +185,7 @@ public:
         }
         case 3:
         {
-            return 9.;
+            return 1.;
             break;
         }
         }
