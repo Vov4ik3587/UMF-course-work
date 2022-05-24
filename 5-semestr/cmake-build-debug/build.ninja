@@ -11,7 +11,7 @@
 # =============================================================================
 
 # =============================================================================
-# Project: 5-semestr
+# Project: 5_semestr
 # Configurations: Debug
 # =============================================================================
 
@@ -41,38 +41,38 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = /home/vava/Study/UMF-course-work/5-semestr/cmake-build-debug/
 # =============================================================================
-# Object build statements for EXECUTABLE target 5-semestr
+# Object build statements for EXECUTABLE target 5_semestr
 
 
 #############################################
-# Order-only phony target for 5-semestr
+# Order-only phony target for 5_semestr
 
-build cmake_object_order_depends_target_5-semestr: phony || CMakeFiles/5-semestr.dir
+build cmake_object_order_depends_target_5_semestr: phony || CMakeFiles/5_semestr.dir
 
-build CMakeFiles/5-semestr.dir/main.cpp.o: CXX_COMPILER__5-semestr_Debug /home/vava/Study/UMF-course-work/5-semestr/main.cpp || cmake_object_order_depends_target_5-semestr
-  DEP_FILE = CMakeFiles/5-semestr.dir/main.cpp.o.d
+build CMakeFiles/5_semestr.dir/main.cpp.o: CXX_COMPILER__5_semestr_Debug /home/vava/Study/UMF-course-work/5-semestr/main.cpp || cmake_object_order_depends_target_5_semestr
+  DEP_FILE = CMakeFiles/5_semestr.dir/main.cpp.o.d
   FLAGS = -g -std=gnu++14
-  OBJECT_DIR = CMakeFiles/5-semestr.dir
-  OBJECT_FILE_DIR = CMakeFiles/5-semestr.dir
-  TARGET_COMPILE_PDB = CMakeFiles/5-semestr.dir/
-  TARGET_PDB = 5-semestr.pdb
+  OBJECT_DIR = CMakeFiles/5_semestr.dir
+  OBJECT_FILE_DIR = CMakeFiles/5_semestr.dir
+  TARGET_COMPILE_PDB = CMakeFiles/5_semestr.dir/
+  TARGET_PDB = 5_semestr.pdb
 
 
 # =============================================================================
-# Link build statements for EXECUTABLE target 5-semestr
+# Link build statements for EXECUTABLE target 5_semestr
 
 
 #############################################
-# Link the executable 5-semestr
+# Link the executable 5_semestr
 
-build 5-semestr: CXX_EXECUTABLE_LINKER__5-semestr_Debug CMakeFiles/5-semestr.dir/main.cpp.o
+build 5_semestr: CXX_EXECUTABLE_LINKER__5_semestr_Debug CMakeFiles/5_semestr.dir/main.cpp.o
   FLAGS = -g
-  OBJECT_DIR = CMakeFiles/5-semestr.dir
+  OBJECT_DIR = CMakeFiles/5_semestr.dir
   POST_BUILD = :
   PRE_LINK = :
-  TARGET_COMPILE_PDB = CMakeFiles/5-semestr.dir/
-  TARGET_FILE = 5-semestr
-  TARGET_PDB = 5-semestr.pdb
+  TARGET_COMPILE_PDB = CMakeFiles/5_semestr.dir/
+  TARGET_FILE = 5_semestr
+  TARGET_PDB = 5_semestr.pdb
 
 
 #############################################
@@ -109,7 +109,7 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 #############################################
 # Folder: /home/vava/Study/UMF-course-work/5-semestr/cmake-build-debug
 
-build all: phony 5-semestr
+build all: phony 5_semestr
 
 # =============================================================================
 # Built-in targets

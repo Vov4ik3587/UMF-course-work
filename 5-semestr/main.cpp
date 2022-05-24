@@ -107,11 +107,11 @@ public:
     {
         switch (Border)
         {
-        case 0:
-        {
-            return -3.0;
-            break;
-        }
+            case 0:
+            {
+                return -3.0;
+                break;
+            }
         case 1:
         {
             return -2.;
@@ -195,7 +195,7 @@ public:
     double U(double x, double y)
     {
 
-        return x;
+        return 1.;
     }
 
     //Создаёт сетку и список связи элементов и узлов
