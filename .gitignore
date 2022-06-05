@@ -2,3 +2,5 @@
 5-semestr/.idea/
 src/bin/
 src/obj/
+
+*.exe
